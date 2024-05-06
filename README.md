@@ -1,3 +1,5 @@
+# CNAdjust
+
 ## Prerequisites
 
 1. Java 11 or later
@@ -39,13 +41,13 @@ The input files are organized by series, with each series containing the corresp
 ```
 Inputdir/
 ├── <series1>
-│   ├── <series1>.seg.txt            segment data with callings              
+│   ├── <series1>.seg.txt            segment data with callings
 │   ├── cohort-assignment.txt        cohort assignments
-│	  ├── cohort-cna-pattern.txt       cohort-specific CNA occurrence
-│	  ├── sampleid-mapping.txt         optional: sample ID mapping
+│   ├── cohort-cna-pattern.txt       cohort-specific CNA occurrence
+│   ├── sampleid-mapping.txt         optional: sample ID mapping
 │   └── cohort-cna-region.txt        optional: custom genomic bin location
 └── <series2>
-    └── ...             
+    └── ...     
 ```
 
 ### 1. Segment files (required)
