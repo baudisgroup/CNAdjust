@@ -100,15 +100,15 @@ Outputdir/
 
     Manipulations on the data include:
 
-    "initial": No change to the data.
+    * "initial": No change to the data.
    
-    "shift-baseline-lower/higher": Attempt to shift the baseline, with the result being better than the original one, therefore used as the final output.
+    * "shift-baseline-lower/higher": Attempt to shift the baseline, with the result being better than the original one, therefore used as the final output.
    
-    "shift-baseline-lower/higher_reverse": Attempt to shift the baseline, but the result was not satisfactory, so the original callings were retained.
+    * "shift-baseline-lower/higher_reverse": Attempt to shift the baseline, but the result was not satisfactory, so the original callings were retained.
    
-    "noisy_lowthre_\<lowcutoff\>\_highthre\_\<highcutoff\>": Using cutoffs for noisy samples.
+    * "noisy_lowthre_\<lowcutoff\>\_highthre\_\<highcutoff\>": Using cutoffs for noisy samples.
    
-    "noisy_nochange": Attempt to apply cutoffs for noisy samples, but the result was not satisfactory, so the original callings were retained.
+    * "noisy_nochange": Attempt to apply cutoffs for noisy samples, but the result was not satisfactory, so the original callings were retained.
 
 3. **Sample Folders**: Within each series folder, there are individual folders for each sample. These folders contain:
 
@@ -176,7 +176,7 @@ You can also get the CNA frequency data directly via the [REST API](https://docs
 
 ### from custom segment data 
 
-You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [location file](#-5.-Genomic-bin-location-file-(optional)) accordingly. Example usage is as follows:
+You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [location file](#-5-Genomic-bin-location-file-optional) accordingly. Example usage is as follows:
 
 ```bash
 nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir --use_custom_prior true 
