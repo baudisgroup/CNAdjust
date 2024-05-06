@@ -176,7 +176,7 @@ You can also get the CNA frequency data directly via the [REST API](https://docs
 
 ### from custom segment data 
 
-You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [location file](#-5-Genomic-bin-location-file-optional) accordingly. Example usage is as follows:
+You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [location file](#5-Genomic-bin-location-file-optional) accordingly. Example usage is as follows:
 
 ```bash
 nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir --use_custom_prior true 
