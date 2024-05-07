@@ -116,7 +116,7 @@ Outputdir/
 
     Segment Data: Final segment data files with adjusted callings.
 
-## Paramters
+## Parameters
 
 Mandatory parameters
 
