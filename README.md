@@ -70,11 +70,11 @@ The cohort CNA occurrence file should also be tab-delimited. Different columns r
 
 ### 4. Sample ID mapping file (optional)
 
-This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter use_idmapping is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
+This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter `use_idmapping` is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
 
 ### 5. Genomic bin location file (optional)
 
-This optional file indicates the genomic locations used to calculate cohort CNA occurrence. If provided and the parameter use_custom_region is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: bin index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `bin_location_file`.
+This optional file indicates the genomic locations used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: bin index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `bin_location_file`.
 
 ## Output
 
