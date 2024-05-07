@@ -52,7 +52,7 @@ Inputdir/
 
 ### 1. Segment files (required)
 
-To be recognized by the workflow, segment file names should include ".seg" text. These files should be tab-delimited and contain at least six columns, including sample ID, chromosome, start, end, number of markers, and log R ratio. Additionally, a column named "label" should be included to store CNA callings as strings ("+1" for gain, "-1" for loss, "0" for copy neutral). For level-specific callings, you can use "+2", "+1", "0", "-1", "-2" to represent high-level duplication, low-level duplication, copy neutral, low-level deletion, and high-level deletion respectively.
+These files should be tab-delimited and contain at least six columns, including sample ID, chromosome, start, end, number of markers, and log R ratio. Additionally, a column named "label" should be included to store CNA callings as strings ("+1" for gain, "-1" for loss, "0" for copy neutral). For level-specific callings, you can use "+2", "+1", "0", "-1", "-2" to represent high-level duplication, low-level duplication, copy neutral, low-level deletion, and high-level deletion respectively. To be recognized by the workflow, segment file names should include ".seg" text.
 
 ### External information
 
@@ -62,19 +62,19 @@ If external information is not provided, you should set the parameter `use_exter
 
 ### 2. Cohort assignment
 
-The cohort assignment file (`cohort-assignment.txt` by default) should be tab-delimited and include two columns: sample IDs and cohort identifiers.
+The cohort assignment file should be tab-delimited and include two columns: sample IDs and cohort identifiers. The default filename for this file is "cohort-assignment.txt" and can be changed by the parameter `cohort_assign_file`.
 
 ### 3. Cohort CNA occurence 
 
-The cohort CNA occurrence file (`cohort-cna-pattern.txt` by default) should also be tab-delimited. Different columns represent CNA occurence probability from different cohorts. Column names should be consistent with cohort identifiers specified in the cohort assignment file. More details about CNA occurence probability see [below](#Cohort-CNA-pattern-data-preparation).
+The cohort CNA occurrence file should also be tab-delimited. Different columns represent CNA occurence probability from different cohorts. Column names should be consistent with cohort identifiers specified in the cohort assignment file. More details about CNA occurence probability see [below](#Cohort-CNA-pattern-data-preparation). The default filename for this file is "cohort-cna-pattern.txt" and can be changed by the parameter `prior_file`.
 
-### 4. Sample id mapping file (optional)
+### 4. Sample ID mapping file (optional)
 
-An optional file for mapping IDs used in segment data to expected sample identifiers (e.g., mapping UUIDs to barcodes in TCGA data). If provided, the sample IDs used in the cohort assignment file should be the expected identifiers, and the sample identifiers used in output files are all mapped to these new identifiers. Default filename is `sampleid-mapping.txt`.
+This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter use_idmapping is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
 
 ### 5. Genomic bin location file (optional)
 
-An optional file for indicating the genomic location used to calculate cohort CNA occurrence. Default filename is `cohort-cna-region.txt`.
+This optional file indicates the genomic locations used to calculate cohort CNA occurrence. If provided and the parameter use_custom_region is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: bin index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `bin_location_file`.
 
 ## Output
 
@@ -152,7 +152,7 @@ By default, the pipeline is locally executed, but it can be run using docker eng
 
 ## Cohort CNA pattern data preparation
 
-By default, the prior CNA pattern in each cohort represents the occurrence probability of CNAs in genomic bins. The bin size is 1 MB. For GRCh38, there are 2 * 3106 bins (gain_frequency + loss_frequency). Detailed genomic bin locations for GRCh38 and GRCh37 can be found in `data/hg38_bin.txt` and `data/hg19_bin.txt`, respectively. You can define the CNA prior pattern yourself based on the same genomic region or custom genomic regions by setting the parameter `--use_custom_prior` to "true", as long as the values can be used as probabilities. The genomic location file should be tab-delimited and include four columns with self-defined column names to indicate bin index, chromosome, start, and end. Here we introduce two simple approaches to get the cohort-specific CNA reference pattern.
+By default, the prior CNA pattern in each cohort represents the occurrence probability of CNAs in genomic bins. The bin size is 1 MB. For GRCh38, there are 2 * 3106 bins (gain_frequency + loss_frequency). Detailed genomic bin locations for GRCh38 and GRCh37 can be found in `data/hg38_bin.txt` and `data/hg19_bin.txt`, respectively. You can define the CNA prior pattern yourself based on the same genomic region or custom genomic regions by setting the parameter `--use_custom_prior` to "true", as long as the values can be used as probabilities. Here we introduce two simple approaches to get the cohort-specific CNA reference pattern.
 
 ### from Progenetix
 
