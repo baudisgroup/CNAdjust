@@ -72,9 +72,9 @@ The cohort CNA occurrence file should also be tab-delimited. Different columns r
 
 This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter `use_idmapping` is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
 
-### 5. Genomic bin location file (optional)
+### 5. Genomic region file (optional)
 
-This optional file indicates the genomic locations used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: bin index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `bin_location_file`.
+This optional file indicates the genomic regions used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: region index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `region_file`.
 
 ## Output
 
@@ -112,10 +112,11 @@ Outputdir/
 
 3. **Sample Folders**: Within each series folder, there are individual folders for each sample. These folders contain:
 
-    Segment Plots: Visual representations of segments colored by CNA states. If baseline shifting was performed for the sample, an additional plot named "segments_before_shift.pdf" is included to show the original callings before shifting.
+    Segment Data: Final segment data files with adjusted callings. The default filename for this file is "result.seg.txt" and can be changed by the parameter `output_seg`.
+   
+    Segment Plots: Visual representations of segments colored by CNA states. The default filename for this file is "segments.pdf" and can be changed by the parameter `output_plot`. If baseline shifting was performed for the sample, an additional plot named "<plotfileBasename>_before_shift.pdf" is included to show the original callings before shifting.
 
-    Segment Data: Final segment data files with adjusted callings.
-
+    
 ## Parameters
 
 Mandatory parameters
@@ -133,15 +134,15 @@ Optional parameters
 * `--cohort_assign_file`: Filename of the input cohort assignment file.
 * `--prior_file`:Filename of the input cohort CNA occurrence file.
 * `--idmapping_file`: Filename of the input sample id mapping file.
-* `--bin_location_file`: Filename of the genomic bin location file.
+* `--region_file`: Filename of the input genomic region file.
 * `--output_seg`: Filename of the output segment data.
 * `--output_plot`: Filename of the output plot of segment data.
 * `--logrsd`: Upper limit of weighted standard deviation of logR by the number of involved markers to identify potential problematic samples in the strict criteria.
-* `--lowfrac`: Upper limit of CNA fraction to identify potential problematic samples in the strict criteria.
+* `--cnafrac`: Upper limit of CNA fraction to identify potential problematic samples in the strict criteria.
 * `--dupdelratio`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the strict criteria.
-* `--lowfrac2`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 2.
+* `--cnafrac2`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 2.
 * `--dupdelratio2`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the more relaxed criteria 2.
-* `--lowfrac3`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 3.
+* `--cnafrac3`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 3.
 * `--segnum`: Upper limit of segment number to identify noisy profiles.
 * `--lowthre`: Thresholds to call low-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion.
 * `--highthre`: Thresholds to call high-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion.
@@ -176,7 +177,7 @@ You can also get the CNA frequency data directly via the [REST API](https://docs
 
 ### from custom segment data 
 
-You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [location file](#5-Genomic-bin-location-file-optional) accordingly. Example usage is as follows:
+You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [region file](#5-Genomic-region-file-optional) accordingly. Example usage is as follows:
 
 ```bash
 nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir --use_custom_prior true 
