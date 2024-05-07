@@ -128,7 +128,7 @@ Optional parameters
 * `--outputdir`: Path to the output data directory.
 * `--use_external_ref`: Logical value to determine if external information is used to adjust CNA.
 * `--use_idmapping`: Logical value to determine if sample identidier mapping is applied  given the sampleid mapping file.
-* `--use_custom_prior`: Logical value to determine if a custom prior is applied given the genomic bin location file.
+* `--use_custom_region`: Logical value to determine if a custom prior is applied given the genomic bin location file.
 * `--genome`: Reference genome assembly version used in segment data.
 * `--cohort_assign_file`: Filename of the input cohort assignment file.
 * `--prior_file`:Filename of the input cohort CNA occurrence file.
@@ -152,7 +152,7 @@ By default, the pipeline is locally executed, but it can be run using docker eng
 
 ## Cohort CNA pattern data preparation
 
-By default, the prior CNA pattern in each cohort represents the occurrence probability of CNAs in genomic bins. The bin size is 1 MB. For GRCh38, there are 2 * 3106 bins (gain_frequency + loss_frequency). Detailed genomic bin locations for GRCh38 and GRCh37 can be found in `data/hg38_bin.txt` and `data/hg19_bin.txt`, respectively. You can define the CNA prior pattern yourself based on the same genomic region or custom genomic regions by setting the parameter `--use_custom_prior` to "true", as long as the values can be used as probabilities. Here we introduce two simple approaches to get the cohort-specific CNA reference pattern.
+By default, the prior CNA pattern in each cohort represents the occurrence probability of CNAs in genomic bins. The bin size is 1 MB. For GRCh38, there are 2 * 3106 bins (gain_frequency + loss_frequency). Detailed genomic bin locations for GRCh38 and GRCh37 can be found in `data/hg38_bin.txt` and `data/hg19_bin.txt`, respectively. You can define the CNA prior pattern yourself based on the same genomic region or custom genomic regions by setting the parameter `--use_custom_region` to "true", as long as the values can be used as probabilities. Here we introduce two simple approaches to get the cohort-specific CNA reference pattern.
 
 ### from Progenetix
 
