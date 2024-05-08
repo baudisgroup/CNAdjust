@@ -28,10 +28,24 @@ This command will create a `nextflow` file in the current directory.
 chmod +x nextflow
 ```
 
+3. Install the pipeline
+
+The first option is to use nextflow, it will be installed in the `$HOME` directory under the `.nextflow/assets` sub-directory.
+
+```bash
+./nextflow pull hangjiaz/CNAdjust
+```
+
+The second option is to clone the pipeline repository into a desired directory. 
+
+```bash
+git clone https://github.com/hangjiaz/CNAdjust.git
+```
+
 ## Usage
 
 ```bash
-nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
+./nextflow run hangjiaz/CNAdjust -r main --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
 ```
 
 ## Input files
