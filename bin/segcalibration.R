@@ -6,18 +6,20 @@ work_dir <- args$workdir
 data_dir <- args$inputdir
 output_dir <- args$outputdir
 usetumorref <- as.logical(args$usetumorref)
+tumorcodefilename <- args$cohortfile
+priorfilename <- args$priorfile
+use_custom_region <- as.logical(args$useregion)
+regionfilename <- args$regionfile
 genome <- args$genome
-outputfilename <- args$outputfilename
-outputplotname <- args$outputplotname
-tumorcodefilename <- args$tumorcodefilename
-priorfilename <- args$priorfilename
+outputfilename <- args$outputfile
+outputplotname <- args$outputplot
 
 logrsd_thre <- as.numeric(args$logrsd)
-lowfrac_thre <- as.numeric(args$lowfrac)
+lowfrac_thre <- as.numeric(args$cnafrac)
 callratio_thre <- as.numeric(args$dupdelratio)
-lowfrac_thre2 <- as.numeric(args$lowfrac2)
+lowfrac_thre2 <- as.numeric(args$cnafrac2)
 callratio_thre2 <- as.numeric(args$dupdelratio2)
-lowfrac_thre3 <- as.numeric(args$lowfrac3)
+lowfrac_thre3 <- as.numeric(args$cnafrac3)
 segnum_thre <- as.numeric(args$segnum)
 lowcutoff <- as.numeric(unlist(strsplit(args$lowthre,split=',')))
 highcutoff <- as.numeric(unlist(strsplit(args$highthre,split=',')))
@@ -39,17 +41,26 @@ report <- read.table(report_path,sep = '\t',header=T)
 # read tumor code annotation file and tumor referecne frequency file 
 if (usetumorref){
     series <- basename(output_dir)
-    prior_code_file <- checkfile(filepath=file.path(data_dir,series),filetype="sample oncology code file",pattern=tumorcodefilename)
-    reference_prior_file <- checkfile(filepath=file.path(data_dir,series), filetype="prior probability file", pattern=priorfilename)  
+    prior_code_file <- checkfile(filepath=file.path(data_dir,series),filetype="cohort assign file",pattern=tumorcodefilename)
+    reference_prior_file <- checkfile(filepath=file.path(data_dir,series), filetype="cohort CNA prior file", pattern=priorfilename)  
     prior_code_df <- read.table(prior_code_file,sep = '\t',header=T,check.names = F)
     prior_prob_df <-  read.table(reference_prior_file,sep = '\t',header=T,check.names = F)
     # check if these two files are matched
     unique_prior_codes <- unique(prior_code_df[,2])
     if (!all(unique_prior_codes %in% colnames(prior_prob_df))) stop("prior is not found for ",unique_prior_codes[!unique_prior_codes %in% colnames(prior_prob_df)])
+    if (!all(report$sample_name %in% prior_code_df[,1])) stop("sample mapping is failed between segment data and cohort assign")
 } else{
     prior_code_df <- NULL
     prior_prob_df <- NULL
 }
+
+if (use_custom_region){
+    bins_info_path <- checkfile(filepath=file.path(data_dir,series),filetype="genome region file",pattern=regionfilename)    
+} else{
+    bins_info_path <- checkfile(filepath=file.path(work_dir,'data'),filetype="genome region file",pattern=paste0(genome,"_bin.txt"))
+}
+
+bins_info <- read.table(bins_info_path ,sep="\t",header=T)
 
 # identify problematic samples
 fail_label_idx <- which(report$lowCNA_cov == 0 & report$highCNA_cov == 0 & report$normal_cov == 0)
@@ -77,8 +88,6 @@ l_shift_samples <- report$sample_name[l_shift_idx]
 # read labeled segment data
 ori_label_seg <- get.labelseg(output_dir,outputfilename)
 if (is.null(ori_label_seg)) stop("labeled data is not found in output dir")
-# read genomic bin location data
-bins_lst <- readRDS(file.path(work_dir,'data',paste0(genome,"_bin.rds")))
 
 num_cohorts <- ifelse(is.null(prior_code_df),1,length(unique(prior_code_df[,2])))
 ref_fit <- readRDS(file.path(work_dir,'data',"reference_fit.rds"))
@@ -113,8 +122,8 @@ for (i in seq_len(num_cohorts)){
     total_shift_sample_prop <- sum(length(cohort_h_shift_samples),length(cohort_l_shift_samples))/length(unique(cohort_oriseg[,1]))
     # if some samples have abnormal baselines, data likelihood and prior (when use frequency) are changed. Then we need to compare posterior between new calling by shifting all of the sample and original callings 
     if (total_shift_sample_prop >= 0.25){
-        compare_1 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_h_shift_samples,total_shift_sample_prop,baseshift = 'h',fit,ref_fit,bins_lst,genome,calling=FALSE)
-        compare_2 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_l_shift_samples,total_shift_sample_prop,baseshift = 'l',fit,ref_fit,bins_lst,genome,calling=FALSE)
+        compare_1 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_h_shift_samples,total_shift_sample_prop,baseshift = 'h',fit,ref_fit,bins_info,genome,calling=FALSE)
+        compare_2 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_l_shift_samples,total_shift_sample_prop,baseshift = 'l',fit,ref_fit,bins_info,genome,calling=FALSE)
         if (is.null(compare_1)) comapre <- compare_2
         if (is.null(compare_2)) comapre <- compare_1
         if (!is.null(compare_1) & !is.null(compare_2)){
@@ -135,7 +144,7 @@ for (i in seq_len(num_cohorts)){
     if (length(cohort_h_shift_samples) > 0){
         for (sample in cohort_h_shift_samples){
             ind_seg <- cohort_oriseg[cohort_oriseg[,1] == report$sample_id[report$sample_name == sample],]
-            report <- shift.baseline(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_lst,fit,ref_fit,genome,calling=FALSE,shift="higher",whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname)
+            report <- shift.baseline(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_info,fit,ref_fit,genome,calling=FALSE,shift="higher",whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname)
         }
     }
     
@@ -143,7 +152,7 @@ for (i in seq_len(num_cohorts)){
     if (length(cohort_l_shift_samples) > 0){
         for (sample in cohort_l_shift_samples){
             ind_seg <- cohort_oriseg[cohort_oriseg[,1] == report$sample_id[report$sample_name == sample],]
-            report <- shift.baseline(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_lst,fit,ref_fit,genome,calling=FALSE,shift="lower",whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname)
+            report <- shift.baseline(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_info,fit,ref_fit,genome,calling=FALSE,shift="lower",whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname)
         }
     }
 
@@ -151,7 +160,7 @@ for (i in seq_len(num_cohorts)){
     if (length(cohort_noisy_samples) > 0){
         for (sample in cohort_noisy_samples){
             ind_seg <- cohort_oriseg[cohort_oriseg[,1] == report$sample_id[report$sample_name == sample],]
-            report <- process.noise(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_lst,fit,ref_fit,genome,calling=FALSE,whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname,lowthres=lowcutoff,highthres=highcutoff)
+            report <- process.noise(output_dir,cohort_oriseg,ind_seg,cohort_code,prior_prob_df,sample,report,bins_info,fit,ref_fit,genome,calling=FALSE,whole_shift = whole_shift,shift_id=whole_shift_ids,shiftnum=whole_shift_num,outputfilename=outputfilename,outputplotname=outputplotname,lowthres=lowcutoff,highthres=highcutoff)
         }
     }
 }

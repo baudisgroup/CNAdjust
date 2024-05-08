@@ -1,5 +1,5 @@
 # determine if whole shift is applied (shift all samples with bias in one direction and leave all other samples unchanged, including samples with bias in the opposite direction)
-compare.whole.shift <- function(output_dir,report,reference_freq_df,prior_code,ori_label_seg,shift_samples,total_shift_sample_prop,baseshift,ori_fit,ref_fit,bins_lst,genome,calling){
+compare.whole.shift <- function(output_dir,report,reference_freq_df,prior_code,ori_label_seg,shift_samples,total_shift_sample_prop,baseshift,ori_fit,ref_fit,bins_info,genome,calling){
   if (length(shift_samples) == 0) return()
   # original data 
   shift_sample_len <- length(shift_samples)
@@ -8,13 +8,13 @@ compare.whole.shift <- function(output_dir,report,reference_freq_df,prior_code,o
   total_ori_posterior <- rep(0,length(unique(ori_label_seg[,1])))
   for (i in seq_len(shift_sample_len)){
     shift_sampleids[i] <- report$sample_id[report$sample_name == shift_samples[i]]
-    total_ori_posterior[i] <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,ori_label_seg[ori_label_seg[,1] == shift_sampleids[i],],bins_lst,ori_fit,ref_fit,genome=genome,priorshift = 'n')
+    total_ori_posterior[i] <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,ori_label_seg[ori_label_seg[,1] == shift_sampleids[i],],bins_info,ori_fit,ref_fit,genome=genome,priorshift = 'n')
   }  
 
   opposite_shift_sampleids <- unique(ori_label_seg[,1])[!unique(ori_label_seg[,1]) %in% shift_sampleids]
   
   for (j in seq_len(length(opposite_shift_sampleids))){
-    total_ori_posterior[i+j]  <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,ori_label_seg[ori_label_seg[,1] == opposite_shift_sampleids[j],],bins_lst,ori_fit,ref_fit,genome=genome,priorshift = 'n')
+    total_ori_posterior[i+j]  <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,ori_label_seg[ori_label_seg[,1] == opposite_shift_sampleids[j],],bins_info,ori_fit,ref_fit,genome=genome,priorshift = 'n')
   }
 
   total_ori_posterior <- sum(total_ori_posterior)
@@ -39,7 +39,7 @@ compare.whole.shift <- function(output_dir,report,reference_freq_df,prior_code,o
       total_shift_posterior <- rep(0,length(unique(new_label_seg[,1])))
 
       for (i in seq_len(length(unique(new_label_seg[,1])))){
-        total_shift_posterior[i] <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,new_label_seg[new_label_seg[,1] == unique(new_label_seg[,1])[i],],bins_lst,shift_fit,ref_fit,genome=genome,calling=calling,priorshift = baseshift,shift_samples=shift_sampleids,shiftnum=k)
+        total_shift_posterior[i] <- compute.posterior(output_dir,reference_freq_df,prior_code,ori_label_seg,new_label_seg[new_label_seg[,1] == unique(new_label_seg[,1])[i],],bins_info,shift_fit,ref_fit,genome=genome,calling=calling,priorshift = baseshift,shift_samples=shift_sampleids,shiftnum=k)
       }
 
       current_total_shift_posterior <- sum(total_shift_posterior)
@@ -72,11 +72,11 @@ compare.whole.shift <- function(output_dir,report,reference_freq_df,prior_code,o
 }
 
 # shift the baseline of specific sample, and update plot and report accordingly
-shift.baseline <- function(output_dir,cohort_seg,oriseg,prior_code,reference_freq_df,sample,report,bins_lst,fit,ref_fit,genome,calling,shift,whole_shift,shift_ids,shiftnum,outputfilename,outputplotname){
+shift.baseline <- function(output_dir,cohort_seg,oriseg,prior_code,reference_freq_df,sample,report,bins_info,fit,ref_fit,genome,calling,shift,whole_shift,shift_ids,shiftnum,outputfilename,outputplotname){
   labelplot_path <- file.path(output_dir ,sample, outputplotname)
   renameplot_path <- file.path(output_dir ,sample,gsub("\\.","_before_shift.",outputplotname))
   
-  ori_posterior <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,oriseg,bins_lst,fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_ids,shiftnum=shiftnum)
+  ori_posterior <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,oriseg,bins_info,fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_ids,shiftnum=shiftnum)
 
   relabelSeg <- oriseg
   current_relabel_posterior <- -1e100
@@ -86,7 +86,7 @@ shift.baseline <- function(output_dir,cohort_seg,oriseg,prior_code,reference_fre
       max_relabel_posterior <-  current_relabel_posterior
       finalrelabelSeg <- relabelSeg
       relabelSeg <- labelSeg::labelseg(data = oriseg,baseshift = substr(shift,1,1),genome=genome,shiftnum=k,labeled=!calling)
-      current_relabel_posterior <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,relabelSeg,bins_lst,fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_ids,shiftnum=shiftnum)
+      current_relabel_posterior <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,relabelSeg,bins_info,fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_ids,shiftnum=shiftnum)
       k <- k+1
   }
 

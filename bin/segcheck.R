@@ -5,11 +5,11 @@ args = R.utils::commandArgs(asValue = T)
 series <- args$series
 work_dir <- args$workdir
 data_dir <- args$inputdir
-idmapping <- as.logical(args$idmapping)
+idmapping <- as.logical(args$useidmapping)
 genome <- args$genome
-outputfilename <- args$outputfilename
-outputplotname <- args$outputplotname
-mappingfile <- args$idmappingfilename
+outputfilename <- args$outputfile
+outputplotname <- args$outputplot
+mappingfile <- args$idmappingfile
 
 # source helper functions
 source(file.path(work_dir,'bin','utils','general-utils.R'))
@@ -27,7 +27,7 @@ dir.create(path= file.path(series),showWarnings = F)
 output_dir <- file.path(series)
 
 # read segment data
-data_file <- checkfile(filepath=file.path(data_dir,series),filetype="input segment data file", pattern="seg")
+data_file <- checkfile(filepath=file.path(data_dir,series),filetype="input segment data file", pattern="\\.seg")
 
 data <- read.csv(data_file,header = T, sep='\t',colClasses = c("label"="character"))
 ## check data content

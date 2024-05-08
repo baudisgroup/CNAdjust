@@ -36,8 +36,8 @@ compute.pointprob <- function(fit, point, reffit=NULL,label=NULL){
 
 extract.bin.feature <- function(data,bins,genome='hg38',exclude.sex.chrom = NULL){
   # transform sex chrom
-  data[,2][data[,2] %in% c(23,'x')] <- 'X'
-  data[,2][data[,2] %in% c(24,'y')] <- 'Y'
+  data <- unify.sexchro(data) 
+  bins <- unify.sexchro(bins)
 
   if (!is.null(exclude.sex.chrom)){
     bins <- bins[!bins[,2] %in% exclude.sex.chrom,]
@@ -61,7 +61,7 @@ extract.bin.feature <- function(data,bins,genome='hg38',exclude.sex.chrom = NULL
       ind.seg.start <- ind.data[j,3]
       ind.seg.end <- ind.data[j,4]
       # find bins where the segment spans
-      sel.bin <- which(bins$chromosome == ind.data[j,2] & bins[,4] > ind.seg.start & bins[,3] < ind.seg.end)
+      sel.bin <- which(bins[,2] == ind.data[j,2] & bins[,4] > ind.seg.start & bins[,3] < ind.seg.end)
       if (length(sel.bin) == 0){next}
       ind_dup_high[sel.bin] <-   ind_dup_high[sel.bin] + as.numeric(ind.data[j,'label'] == '+2')
       ind_del_high[sel.bin] <- ind_del_high[sel.bin] + as.numeric(ind.data[j,'label'] == '-2')
@@ -99,16 +99,15 @@ extract.bin.feature <- function(data,bins,genome='hg38',exclude.sex.chrom = NULL
   return(feature.list)
 }
 
-get.freq <- function(data,bins_lst,output_path=NULL,save_freq=F,genome='hg38',exclude_sex_chrom = NULL,mergelevel=F){
-  bins <- do.call(rbind, bins_lst)
+get.freq <- function(data,bins,output_path=NULL,save_freq=F,genome='hg38',exclude_sex_chrom = NULL,mergelevel=F){
   # special: return flat prior
   if (is.null(data)){
     freq.lst <- list()
-    freq.lst[['+1']] <- rep(1,ncol(bins))
-    freq.lst[['+2']] <- rep(1,ncol(bins))
-    freq.lst[['-1']] <- rep(1,ncol(bins))
-    freq.lst[['-2']] <- rep(1,ncol(bins))
-    freq.lst[['0']] <- rep(1,ncol(bins))
+    freq.lst[['+1']] <- rep(1,nrow(bins))
+    freq.lst[['+2']] <- rep(1,nrow(bins))
+    freq.lst[['-1']] <- rep(1,nrow(bins))
+    freq.lst[['-2']] <- rep(1,nrow(bins))
+    freq.lst[['0']] <- rep(1,nrow(bins))
     return(freq.lst)
   }
   
@@ -162,7 +161,7 @@ get.freq <- function(data,bins_lst,output_path=NULL,save_freq=F,genome='hg38',ex
 }
 
 # posterior calculation
-compute.posterior <- function(output_dir,reference_freq_df,prior_code,series.seg,seg,bins_lst,fit,reffit,return_details=F,genome='hg38',calling = F,priorshift='n',shift_samples=NULL,shiftnum=NULL){
+compute.posterior <- function(output_dir,reference_freq_df,prior_code,series.seg,seg,bins_info,fit,reffit,return_details=F,genome='hg38',calling = F,priorshift='n',shift_samples=NULL,shiftnum=NULL){
   if (length(prior_code) > 0 & !is.na(prior_code) & !is.null(reference_freq_df)){
     reference_freq <- reference_freq_df[[prior_code]]
     prior <- list()
@@ -190,7 +189,7 @@ compute.posterior <- function(output_dir,reference_freq_df,prior_code,series.seg
         data[data[,1] %in% shift_samples,] <- labelSeg::labelseg(data[data[,1] %in% shift_samples,],baseshift = priorshift,genome=genome,shiftnum=shiftnum,labeled=!calling)
       }
       ## compute 
-      prior <- get.freq(data,bins_lst,output_path = freq_obj_path,save_freq = T,genome=genome,mergelevel=T)
+      prior <- get.freq(data,bins_info,output_path = freq_obj_path,save_freq = T,genome=genome,mergelevel=T)
     }
   }
   # missing levels for adjusted callings
@@ -200,16 +199,16 @@ compute.posterior <- function(output_dir,reference_freq_df,prior_code,series.seg
       fit[[level]] <- reffit[[level]]
     }
   } 
-     
-  seg[,2][seg[,2] == 'X'] <- 23
-  seg[,2][seg[,2] == 'Y'] <- 24
+  
+  seg <- unify.sexchro(seg) 
+  bins_info <- unify.sexchro(bins_info)
   
   posterior <- vapply(seq_len(dim(seg)[1]), function(i){
     x <- seg[i,]
     ind_fit <- fit[[x$label]]
     lld <- compute.pointprob(ind_fit, x[,6], reffit, x$label) 
     ind_prior <- prior[[x$label]]
-    ind_bins <- bins_lst[[as.numeric(x[,2])]]
+    ind_bins <- bins_info[bins_info[,2] == x[,2],]
     ind_intersect_bins <- ind_bins[ind_bins[,3] < x[,4] & ind_bins[,4] > x[,3],'index']
     ind_avg_prior <- mean(ind_prior[ind_intersect_bins])
     return((ceiling((x[,4]-x[,3])/1000000)) * log10(ind_avg_prior * lld+1e-25))

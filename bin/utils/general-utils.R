@@ -17,6 +17,12 @@ checkfile <- function(filepath,filetype,pattern){
   return(filepath)
 }
 
+unify.sexchro <- function(segdata){
+  segdata[,2][segdata[,2] %in% c(23,'x')] <- "X"
+  segdata[,2][segdata[,2] %in% c(24,"y")] <- "Y"
+  return(segdata)
+}
+
 get.labelseg <- function(output_dir,filename,sample=NULL){
   files <- list.files(output_dir,recursive = T)
   files <- files[grep(filename,files)]

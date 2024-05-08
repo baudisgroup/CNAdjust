@@ -11,17 +11,19 @@ process segcalibration{
     path  outputdir
     path  inputdir
     val   usetumorref
+    val   cohortfile
+    val   priorfile
+    val   useregion
+    val   regionfile
     val   genome
-    val   outputfilename
-    val   outputplotname
-    val   tumorcodefilename
-    val   priorfilename
+    val   outputfile
+    val   outputplot
     val   logrsd
-    val   lowfrac
+    val   cnafrac
     val   dupdelratio
-    val   lowfrac2
+    val   cnafrac2
     val   dupdelratio2
-    val   lowfrac3
+    val   cnafrac3
     val   segnum
     val   lowthre
     val   highthre
@@ -30,6 +32,6 @@ process segcalibration{
 
     script:       
     """
-    segcalibration.R -workdir $projectDir -outputdir $outputdir -inputdir $inputdir -usetumorref $usetumorref -genome $genome -outputfilename $outputfilename -outputplotname $outputplotname -tumorcodefilename $tumorcodefilename -priorfilename $priorfilename -logrsd $logrsd -lowfrac $lowfrac -dupdelratio $dupdelratio -lowfrac2 $lowfrac2 -dupdelratio2 $dupdelratio2 -lowfrac3 $lowfrac3  -segnum $segnum -lowthre $lowthre -highthre $highthre
+    segcalibration.R -workdir $projectDir -outputdir $outputdir -inputdir $inputdir -usetumorref $usetumorref -cohortfile $cohortfile -priorfile $priorfile -useregion $useregion -regionfile $regionfile -genome $genome -outputfile $outputfile -outputplot $outputplot  -logrsd $logrsd -cnafrac $cnafrac -dupdelratio $dupdelratio -cnafrac2 $cnafrac2 -dupdelratio2 $dupdelratio2 -cnafrac3 $cnafrac3  -segnum $segnum -lowthre $lowthre -highthre $highthre
     """
 }

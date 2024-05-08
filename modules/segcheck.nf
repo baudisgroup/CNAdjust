@@ -8,17 +8,17 @@ process segcheck{
     input:
     val  series
     path inputdir 
-    val  idmapping
+    val  useidmapping
     val  genome
-    val  outputfilename
-    val  outputplotname
-    val  idmappingfilename
+    val  outputfile
+    val  outputplot
+    val  idmappingfile
     output:
     path "$series"
 
     script:       
     """
-    segcheck.R -series $series -workdir $projectDir -inputdir $inputdir -idmapping $idmapping -genome $genome -outputfilename $outputfilename -outputplotname $outputplotname -idmappingfilename $idmappingfilename
+    segcheck.R -series $series -workdir $projectDir -inputdir $inputdir -useidmapping $useidmapping -genome $genome -outputfile $outputfile -outputplot $outputplot -idmappingfile $idmappingfile
     """
 }
 

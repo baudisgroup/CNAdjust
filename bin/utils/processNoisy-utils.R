@@ -9,14 +9,14 @@ cutoff.calling <- function(seg,low_thre,high_thre){
   return(seg)
 }
 
-process.noise <- function(output_dir,cohort_seg,oriseg,prior_code,reference_freq_df,sample,report,bins_lst,ori_fit,ref_fit,genome,calling,whole_shift,shift_id,shiftnum,outputfilename,outputplotname, lowthres, highthres){
-  assess <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,oriseg,bins_lst,ori_fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_id,shiftnum=shiftnum)
+process.noise <- function(output_dir,cohort_seg,oriseg,prior_code,reference_freq_df,sample,report,bins_info,ori_fit,ref_fit,genome,calling,whole_shift,shift_id,shiftnum,outputfilename,outputplotname, lowthres, highthres){
+  assess <- compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,oriseg,bins_info,ori_fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_id,shiftnum=shiftnum)
   target <- oriseg
   method <- 'nochange'
   for ( l_thre in lowthres){
     for (h_thre in highthres){
       relabelSeg <- cutoff.calling(oriseg,l_thre,h_thre)
-      reassess <-  compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,relabelSeg,bins_lst,ori_fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_id,shiftnum=shiftnum)
+      reassess <-  compute.posterior(output_dir,reference_freq_df,prior_code,cohort_seg,relabelSeg,bins_info,ori_fit,ref_fit,genome=genome,calling=calling,priorshift=whole_shift,shift_samples=shift_id,shiftnum=shiftnum)
       if (reassess > assess){
         assess <- reassess
         target <- relabelSeg
