@@ -74,7 +74,7 @@ This optional file is used for mapping IDs used in segment data to expected samp
 
 ### 5. Genomic region file (optional)
 
-This optional file indicates the genomic regions used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: region index, chromosome, start position, and end position. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `region_file`.
+This optional file indicates the genomic regions used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: region index, chromosome, start position, and end position (example see `data/hg38_bin.txt`). The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `region_file`.
 
 ## Output
 
