@@ -39,6 +39,23 @@ sudo mv nextflow /usr/local/bin
 ```bash
 nextflow info
 ```
+5. Install this pipeline:
+
+You have two options for installing the pipeline.
+
+**Install using nextflow:** This will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets sub-directory`.
+
+```bash
+nextflow pull hangjiaz/CNAdjust
+```
+
+**Clone the repository:** Alternatively, you can clone the pipeline repository into a desired directory using:
+
+```bash
+git clone https://github.com/hangjiaz/CNAdjust.git
+```
+
+and then run this workflow by pointing to the installation path (replace `hangjiaz/CNAdjust` with `/path/to/CNAdjust` in the following commands and there's no need to include `-r main`).
 
 ## Quick start
 
@@ -62,18 +79,6 @@ This command will use the `test-data` folder as input and output the result in t
 
 ```bash
 nextflow run hangjiaz/CNAdjust -r main --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
-```
-The above command will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets sub-directory`.
-
-Alternatively, you can clone the pipeline repository into a desired directory using:
-
-```bash
-git clone https://github.com/hangjiaz/CNAdjust.git
-```
-and then run this workflow by pointing to the installation path as follows:
-
-```bash
-nextflow run /path/to/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
 ```
 
 ## Input files
