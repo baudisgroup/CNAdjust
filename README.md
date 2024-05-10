@@ -55,7 +55,7 @@ nextflow pull hangjiaz/CNAdjust
 git clone https://github.com/hangjiaz/CNAdjust.git
 ```
 
-and then run this workflow by pointing to the installation path (replace `hangjiaz/CNAdjust` with `/path/to/CNAdjust` in the following commands and there's no need to include `-r main`).
+and then run this workflow by pointing to the installation path (replace `hangjiaz/CNAdjust` with `/path/to/CNAdjust` in the following commands).
 
 ## Quick start
 
@@ -78,7 +78,7 @@ This command will use the `test-data` folder as input and output the result in t
 ## Usage
 
 ```bash
-nextflow run hangjiaz/CNAdjust -r main --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
+nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
 ```
 
 ## Input files
