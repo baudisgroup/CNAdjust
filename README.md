@@ -14,7 +14,7 @@ remotes::install_github('baudisgroup/labelSeg')
 
 ## Installation
 
-1. Install nextflow by using the follwowing command:
+1. Install [nextflow](https://www.nextflow.io/) by using the follwowing command:
 
 ```bash
 curl -s https://get.nextflow.io | bash
@@ -28,24 +28,34 @@ This command will create a `nextflow` file in the current directory.
 chmod +x nextflow
 ```
 
-3. Install the pipeline
-
-The first option is to use nextflow, it will be installed in the `$HOME` directory under the `.nextflow/assets` sub-directory.
+3. Move Nextflow into an executable path:
 
 ```bash
-./nextflow pull hangjiaz/CNAdjust
+sudo mv nextflow /usr/local/bin
 ```
 
-The second option is to clone the pipeline repository into a desired directory. 
+4. Confirm that Nextflow is installed correctly:
 
 ```bash
-git clone https://github.com/hangjiaz/CNAdjust.git
+nextflow info
 ```
 
 ## Usage
 
 ```bash
-./nextflow run hangjiaz/CNAdjust -r main --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
+nextflow run hangjiaz/CNAdjust -r main --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
+```
+The above command will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets sub-directory`.
+
+Alternatively, you can clone the pipeline repository into a desired directory using:
+
+```bash
+git clone https://github.com/hangjiaz/CNAdjust.git
+```
+and then run this workflow by pointing to the installation path as follows:
+
+```bash
+nextflow run /path/to/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
 ```
 
 ## Input files
@@ -92,7 +102,7 @@ This optional file indicates the genomic regions used to calculate cohort CNA oc
 
 ## Output
 
-By default, the output directory is a folder named "output" located in the current directory. The structure of the output files is as follows:
+By default, the output directory is a subfolder named "output" under the directory where the workflow project is stored in the computer. The structure of the output files is as follows:
 
 ```
 Outputdir/
