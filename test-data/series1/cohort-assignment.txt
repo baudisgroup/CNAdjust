@@ -1,0 +1,7 @@
+sample	cohort
+sample1	NCIT:C9245
+sample2	NCIT:C9245
+sample3	NCIT:C9245
+sample4	NCIT:C9245
+sample5	NCIT:C9245
+sample6	NCIT:C9245

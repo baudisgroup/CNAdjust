@@ -36,7 +36,7 @@ source(file.path(work_dir,'bin','plotseglabel.R'))
 
 
 # read qc report
-report_path <- checkfile(filepath=output_dir,filetype="QC report",pattern="data_quality_report.txt")
+report_path <- checkfile(filepath=output_dir,filetype="QC report",pattern="analyse_report.txt")
 report <- read.table(report_path,sep = '\t',header=T)
 # read tumor code annotation file and tumor referecne frequency file 
 if (usetumorref){
@@ -124,8 +124,8 @@ for (i in seq_len(num_cohorts)){
     if (total_shift_sample_prop >= 0.25){
         compare_1 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_h_shift_samples,total_shift_sample_prop,baseshift = 'h',fit,ref_fit,bins_info,genome,calling=FALSE)
         compare_2 <- compare.whole.shift(output_dir,report,prior_prob_df,cohort_code,cohort_oriseg,cohort_l_shift_samples,total_shift_sample_prop,baseshift = 'l',fit,ref_fit,bins_info,genome,calling=FALSE)
-        if (is.null(compare_1)) comapre <- compare_2
-        if (is.null(compare_2)) comapre <- compare_1
+        if (is.null(compare_1)) compare <- compare_2
+        if (is.null(compare_2)) compare <- compare_1
         if (!is.null(compare_1) & !is.null(compare_2)){
             if (compare_2$posterior > compare_1$posterior){
                 compare <- compare_2
@@ -166,5 +166,5 @@ for (i in seq_len(num_cohorts)){
 }
 
 
-write.table(report, file=file.path(output_dir,'data_quality_report.txt'),sep = '\t',quote = F,row.names = F)
+write.table(report, file=file.path(output_dir,'analyse_report.txt'),sep = '\t',quote = F,row.names = F)
 

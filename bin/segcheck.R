@@ -87,5 +87,5 @@ for (i in seq_len(length(sample_ids))){
 }
 report <- do.call(rbind, report)
 # write report 
-write.table(report, file=file.path(output_dir,'data_quality_report.txt'),sep = '\t',quote = F,row.names = F)
+write.table(report, file=file.path(output_dir,'analyse_report.txt'),sep = '\t',quote = F,row.names = F)
 

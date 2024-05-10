@@ -40,6 +40,24 @@ sudo mv nextflow /usr/local/bin
 nextflow info
 ```
 
+## Quick start
+
+### Call help
+
+```bash
+nextflow run hangjiaz/CNAdjust --help
+```
+
+If the help message is printed, it means the installation was successful.
+
+### Try a test run
+
+```bash
+nextflow run hangjiaz/CNAdjust -profile test
+```
+
+This command will use the `test-data` folder as input and output the result in the current directory.
+
 ## Usage
 
 ```bash
@@ -102,16 +120,16 @@ This optional file indicates the genomic regions used to calculate cohort CNA oc
 
 ## Output
 
-By default, the output directory is a subfolder named "output" under the directory where the workflow project is stored in the computer. The structure of the output files is as follows:
+By default, the output directory is a folder named "output" in the current directory. The structure of the output files is as follows:
 
 ```
 Outputdir/
 ├── <series1>
-│   ├─── data_quality_report.txt
+│   ├─── analyse_report.txt
 │   ├─── <sample1>
 │   │   ├── segments.pdf
 │   │   └── result.seg.txt
-│   ├── <sample2>
+│   ├─── <sample2>
 │   │   ├── segments_before_shift.pdf
 │   │   ├── segments.pdf
 │   │   └── result.seg.txt
@@ -120,7 +138,7 @@ Outputdir/
     └── ...                 
 ```
 
-1. **Series Folder**: Each series folder contains a data quality report summarizing the features extracted from segment profiles and the manipulations performed on them.
+1. **Series Folder**: Each series folder contains a report summarizing the features extracted from segment profiles and the manipulations performed on them.
 
     Manipulations on the data include:
 
@@ -138,38 +156,37 @@ Outputdir/
 
     Segment Data: Final segment data files with adjusted callings. The default filename for this file is "result.seg.txt" and can be changed by the parameter `output_seg`.
    
-    Segment Plots: Visual representations of segments colored by CNA states. The default filename for this file is "segments.pdf" and can be changed by the parameter `output_plot`. If baseline shifting was performed for the sample, an additional plot named "<plotfileBasename>_before_shift.pdf" is included to show the original callings before shifting.
-
+    Segment Plots: Visual representations of segments colored by CNA states. The default filename for this file is "segments.pdf" and can be changed by the parameter `output_plot`. If baseline shifting was performed for the sample, an additional plot named "\<plotfileBasename\>\_before_shift.pdf" is included to show the original callings before shifting.
     
 ## Parameters
 
 Mandatory parameters
 
 * `--inputdir`: Path to the input data directory.
-* `--series`: Name of the series to be analyzed. It should be the folder name of the subfolder under `inputdir`.
+* `--series`: Name of the series to be analyzed. It should be folder names of the subfolders under `inputdir` and concatenated with commas.
 
 Optional parameters
 
-* `--outputdir`: Path to the output data directory.
-* `--use_external_ref`: Logical value to determine if external information is used to adjust CNA.
-* `--use_idmapping`: Logical value to determine if sample identidier mapping is applied  given the sampleid mapping file.
-* `--use_custom_region`: Logical value to determine if a custom prior is applied given the genomic bin location file.
-* `--genome`: Reference genome assembly version used in segment data. Available options are "hg38", "hg19", and "hg18".
-* `--cohort_assign_file`: Filename of the input cohort assignment file.
-* `--prior_file`:Filename of the input cohort CNA occurrence file.
-* `--idmapping_file`: Filename of the input sample id mapping file.
-* `--region_file`: Filename of the input genomic region file.
-* `--output_seg`: Filename of the output segment data.
-* `--output_plot`: Filename of the output plot of segment data.
-* `--logrsd`: Upper limit of weighted standard deviation of logR by the number of involved markers to identify potential problematic samples in the strict criteria.
-* `--cnafrac`: Upper limit of CNA fraction to identify potential problematic samples in the strict criteria.
-* `--dupdelratio`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the strict criteria.
-* `--cnafrac2`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 2.
-* `--dupdelratio2`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the more relaxed criteria 2.
-* `--cnafrac3`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 3.
-* `--segnum`: Upper limit of segment number to identify noisy profiles.
-* `--lowthre`: Thresholds to call low-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion.
-* `--highthre`: Thresholds to call high-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion.
+* `--outputdir`: Path to the output data directory. By default, it's in the current folder with the folder name 'output'.
+* `--use_external_ref`: Logical value to determine if external information is used to adjust CNA. Default is true.
+* `--use_idmapping`: Logical value to determine if sample identidier mapping is applied given the sampleid mapping file. Default is false.
+* `--use_custom_region`: Logical value to determine if a custom prior is applied given the genomic bin location file. Default is false. 
+* `--genome`: Reference genome assembly version used in segment data. Available options are "hg38", "hg19", and "hg18". Default is "hg38".
+* `--cohort_assign_file`: Filename of the input cohort assignment file. Default is "cohort-assignment.txt".
+* `--prior_file`:Filename of the input cohort CNA occurrence file. Default is "cohort-cna-pattern.txt".
+* `--idmapping_file`: Filename of the input sample id mapping file. Default is "sampleid-mapping.txt".
+* `--region_file`: Filename of the input genomic region file. Default is "cohort-cna-region.txt".
+* `--output_seg`: Filename of the output segment data. Default is "result.seg.txt".
+* `--output_plot`: Filename of the output plot of segment data. Default is "segments.pdf".
+* `--logrsd`: Upper limit of weighted standard deviation of logR by the number of involved markers to identify potential problematic samples in the strict criteria. Default is 0.35.
+* `--cnafrac`: Upper limit of CNA fraction to identify potential problematic samples in the strict criteria. Default is 0.5.
+* `--dupdelratio`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the strict criteria. Default is 3.
+* `--cnafrac2`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 2. Default is 0.2.
+* `--dupdelratio2`: Upper limit of the fraction ratio and its reciprocal as lower limit to identify potential problematic samples in the more relaxed criteria 2. Default is 5.
+* `--cnafrac3`: Upper limit of CNA fraction to identify potential problematic samples in the more relaxed criteria 3. Default is 0.7. 
+* `--segnum`: Upper limit of segment number to identify noisy profiles. Defalut is 1000.
+* `--lowthre`: Thresholds to call low-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion. It can be multiple values concatenated with commas. Default is 0.1,0.15,0.3.
+* `--highthre`: Thresholds to call high-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion. It can be multiple values concatenated with commas. Default is 1,1.5,2.
 
 ## Profile 
 
