@@ -43,7 +43,7 @@ nextflow info
 
 You have two options for installing the pipeline.
 
-**Install using nextflow:** This will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets sub-directory`.
+**Install using nextflow:** This will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets` sub-directory.
 
 ```bash
 nextflow pull hangjiaz/CNAdjust
@@ -55,14 +55,16 @@ nextflow pull hangjiaz/CNAdjust
 git clone https://github.com/hangjiaz/CNAdjust.git
 ```
 
-and then run this workflow by pointing to the installation path (replace `hangjiaz/CNAdjust` with `/path/to/CNAdjust` in the following commands).
+and then run this workflow by pointing to the installation path.
 
 ## Quick start
 
 ### Call help
 
+If you installed the pipeline using nextflow, simply point to the installation path as follows;
+
 ```bash
-nextflow run hangjiaz/CNAdjust --help
+nextflow run ~/.nextflow/assets/hangjiaz/CNAdjust --help
 ```
 
 If the help message is printed, it means the installation was successful.
@@ -70,7 +72,7 @@ If the help message is printed, it means the installation was successful.
 ### Try a test run
 
 ```bash
-nextflow run hangjiaz/CNAdjust -profile test
+nextflow run ~/.nextflow/assets/hangjiaz/CNAdjust -profile test
 ```
 
 This command will use the `test-data` folder as input and output the result in the current directory.
@@ -78,7 +80,7 @@ This command will use the `test-data` folder as input and output the result in t
 ## Usage
 
 ```bash
-nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
+nextflow run /path/to/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir
 ```
 
 ## Input files
@@ -195,7 +197,7 @@ Optional parameters
 
 ## Profile 
 
-By default, the pipeline is locally executed, but it can be run using docker engine by simply setting `-profile docker`.
+By default, the pipeline is locally executed, but it can be run using docker engine by setting `-profile docker`.
 
 ## Cohort CNA pattern data preparation
 
@@ -226,6 +228,6 @@ You can also get the CNA frequency data directly via the [REST API](https://docs
 You can utilize the function `segtoFreq` from `pgxRpi` R package (version >= 1.0.1 or >= 1.1.2) to derive CNA frequency from segment data. These frequencies need to be transformed into probabilities. By default, the binning aligns with that used in CNAdjust. However, if you calculate CNA frequency for different genomic bins, such as using different bin sizes, you should provide the [region file](#5-Genomic-region-file-optional) accordingly. Example usage is as follows:
 
 ```bash
-nextflow run hangjiaz/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir --use_custom_prior true 
+nextflow run /path/to/CNAdjust --inputdir /path/to/Inputdir --series <series1>,<series2> --outputdir /path/to/Outputdir --use_custom_prior true 
 ```
 
