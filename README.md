@@ -221,7 +221,7 @@ cnaprob <- assay(cnafreq)/100
 write.table(cnaprob,"cohort-cna-pattern.txt"),quote = F,sep = '\t',row.names = F,col.names = T)
 ```
 
-You can also get the CNA frequency data directly via the [REST API](https://docs.progenetix.org/file-formats/?h=#data-matrix-files), but the data need to be modified slightly to follow the format which CNAadjust uses.
+You can also get the CNA frequency data directly via the [REST API](https://docs.progenetix.org/file-formats/?h=#data-matrix-files), but the data need to be modified slightly to follow the format which CNAdjust uses.
 
 ### from custom segment data 
 
