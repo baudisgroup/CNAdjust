@@ -164,7 +164,11 @@ Outputdir/
     Segment Data: Final segment data files with adjusted callings. The default filename for this file is "result.seg.txt" and can be changed by the parameter `output_seg`.
    
     Segment Plots: Visual representations of segments colored by CNA states. The default filename for this file is "segments.pdf" and can be changed by the parameter `output_plot`. If baseline shifting was performed for the sample, an additional plot named "\<plotfileBasename\>\_before_shift.pdf" is included to show the original callings before shifting.
-    
+
+## Profile 
+
+By default, the pipeline is locally executed, but it can be run using docker engine by setting `-profile docker`.
+
 ## Parameters
 
 Mandatory parameters
@@ -194,10 +198,6 @@ Optional parameters
 * `--segnum`: Upper limit of segment number to identify noisy profiles. Defalut is 1000.
 * `--lowthre`: Thresholds to call low-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion. It can be multiple values concatenated with commas. Default is 0.1,0.15,0.3.
 * `--highthre`: Thresholds to call high-level CNA in noisy profiles. It should be a positive value used to call duplication, and its opposite is used to call deletion. It can be multiple values concatenated with commas. Default is 1,1.5,2.
-
-## Profile 
-
-By default, the pipeline is locally executed, but it can be run using docker engine by setting `-profile docker`.
 
 ## Cohort CNA pattern data preparation
 
