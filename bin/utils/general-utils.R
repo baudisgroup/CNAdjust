@@ -60,31 +60,21 @@ seg.cov <- function(seg){
   return(score)
 }
 
-update.seg <- function(output_dir,sample,oriseg, relabelSeg,report,score,problem,genome='hg38',mergeseg=F, outputfilename, outputplotname){
-  mergseg_path <- file.path(output_dir,sample,'merged_segments.seg.txt')
-  if (is.null(relabelSeg)){
-    if (file.exists(mergseg_path)){
-      relabelSeg <- read.table(mergseg_path,sep = '\t',header = T)
-    } else{
-      relabelSeg <- oriseg
-    }
-    plotseglabel(filepath = file.path(output_dir,sample),filename=outputplotname,data = relabelSeg,assembly = genome,no_label = T)
+update.seg <- function(output_dir,sample,oriseg,relabelSeg,report,score,problem,genome='hg38',outputfilename,outputplotname){
+  if (is.null(relabelSeg)){    
+    plotseglabel(filepath = file.path(output_dir,sample),filename=outputplotname,data = oriseg,assembly = genome,no_label = T)
     problem <- paste0(problem,';failed-to-label')
-  } else{
-    experiment = unique(relabelSeg[,1])
-    write.table(relabelSeg, file=file.path(output_dir,sample, outputfilename),sep = '\t',quote=F,row.names = F)
-    plotseglabel(filepath = file.path(output_dir,sample),filename=outputplotname,data = relabelSeg,assembly = genome)
-    if (file.exists(mergseg_path)) system(sprintf("rm  %s", mergseg_path))
-  }
+    return(report)
+  } 
+  
+  experiment = unique(relabelSeg[,1])
+  write.table(relabelSeg, file=file.path(output_dir,sample, outputfilename),sep = '\t',quote=F,row.names = F)
+  plotseglabel(filepath = file.path(output_dir,sample),filename=outputplotname,data = relabelSeg,assembly = genome)
+  
   #update report
   idx <- which(report$sample_name == sample)
   report[idx,c('normal_cov','lowCNA_cov','lowCNA_ratio','highCNA_cov')] <- c(score$normal_cov,score$lowCNA_cov,score$lowCNA_ratio,score$highCNA_cov)
   report$note[idx] <- paste0(report$note[idx],";", problem)
-  
-  if (mergeseg){
-    lrrsegsd <- round(sd(rep(relabelSeg[,6],abs(relabelSeg[,5]))),3)
-    report[idx,c('segment_num',	'LLR_segsd')] <- c(dim(relabelSeg)[1],lrrsegsd)
-  }
   
   return(report)
 }

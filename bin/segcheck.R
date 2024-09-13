@@ -57,31 +57,20 @@ for (i in seq_len(length(sample_ids))){
   lrrsegsd <- round(sd(rep(ind_sample_seg[,6],ind_sample_seg[,5])),3)
   ## segment number
   segNum <- dim(ind_sample_seg)[1]
-  if (dim(ind_sample_seg)[1] > 0){
-    ## called coverage
-    cov <- seg.cov(ind_sample_seg)
-    lowCov <- cov$lowCNA_cov
-    highCov <-  cov$highCNA_cov
-    normalCov <- cov$normal_cov
-    lowCov_ratio <- cov$lowCNA_ratio
+
+  ## called coverage
+  cov <- seg.cov(ind_sample_seg)
+  lowCov <- cov$lowCNA_cov
+  highCov <-  cov$highCNA_cov
+  normalCov <- cov$normal_cov
+  lowCov_ratio <- cov$lowCNA_ratio
     
-    # plot and save image of labelled segments
-    plotseglabel(filepath = file.path(output_dir,ind_sample_name),filename=outputplotname,data = ind_sample_seg, assembly = genome)
-    # write labelled segment file
-    write.table(ind_sample_seg, file=file.path(output_dir,ind_sample_name,outputfilename), sep = '\t',row.names = F,quote=F)
-    note <- "initial"
-    
-  } else{
-    # if the segment data is failed to label
-    lowCov <- 0
-    highCov <- 0
-    normalCov <- 0
-    lowCov_ratio <- 0
-    plotseglabel(filepath = file.path(output_dir,ind_sample_name),filename=outputplotname,data = ind_sample_seg,assembly = genome,no_label = T)
-    write.table(ind_sample_seg, file=file.path(output_dir,ind_sample_name,outputfilename), sep = '\t',row.names = F,quote=F)
-    note <- "failed-to-label"
-  }
-  
+  # plot and save image of labelled segments
+  plotseglabel(filepath = file.path(output_dir,ind_sample_name),filename=outputplotname,data = ind_sample_seg, assembly = genome)
+  # write labelled segment file
+  write.table(ind_sample_seg, file=file.path(output_dir,ind_sample_name,outputfilename), sep = '\t',row.names = F,quote=F)
+  note <- "initial"
+      
   report[[i]] <- data.frame(sample_id=ind_sample_id,sample_name=ind_sample_name, segment_num=segNum, LLR_segsd = lrrsegsd, 
                             normal_cov= normalCov, lowCNA_cov=lowCov, lowCNA_ratio=lowCov_ratio , highCNA_cov= highCov, note=note)
 }
