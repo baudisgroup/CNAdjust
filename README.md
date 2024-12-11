@@ -101,7 +101,7 @@ Inputdir/
 
 ### 1. Segment files (required)
 
-These files should be tab-delimited and contain at least six columns, including sample ID, chromosome, start, end, number of markers, and log R ratio. Additionally, a column named "label" should be included to store CNA callings as strings ("+1" for gain, "-1" for loss, "0" for copy neutral). For level-specific callings, you can use "+2", "+1", "0", "-1", "-2" to represent high-level duplication, low-level duplication, copy neutral, low-level deletion, and high-level deletion respectively. To be recognized by the workflow, segment file names should include ".seg" text.
+These files should be tab-delimited and contain seven columns, including sample ID, chromosome, start, end, number of markers, log R ratio, and CNA labels. For the first six columns, column names could be flexible but order does matter. The last column must be named "label" and store CNA callings as strings ("+1" for gain, "-1" for loss, "0" for copy neutral). For level-specific callings, you can use "+2", "+1", "0", "-1", "-2" to represent high-level duplication, low-level duplication, copy neutral, low-level deletion, and high-level deletion respectively. To be recognized by the workflow, segment file names should include ".seg" text.
 
 ### External information
 
@@ -109,21 +109,21 @@ External information includes cohort assignments for samples and cohort-specific
 
 If external information is not provided, you should set the parameter `use_external_ref` to "false". This setting assumes that all samples within the series are biologically and technologically similar. Consequently, the workflow utilizes the CNA frequency calculated from all samples as prior information.
 
-### 2. Cohort assignment
+#### 2. Cohort assignment
 
-The cohort assignment file should be tab-delimited and include two columns: sample IDs and cohort identifiers. The default filename for this file is "cohort-assignment.txt" and can be changed by the parameter `cohort_assign_file`.
+The cohort assignment file should be tab-delimited and include two columns: sample IDs and cohort identifiers. Column names could be flexible but order does matter. The default filename for this file is "cohort-assignment.txt" and can be changed by the parameter `cohort_assign_file`.
 
-### 3. Cohort CNA occurence 
+#### 3. Cohort CNA occurence 
 
 The cohort CNA occurrence file should also be tab-delimited. Different columns represent CNA occurence probability from different cohorts. Column names should be consistent with cohort identifiers specified in the cohort assignment file. More details about CNA occurence probability see [below](#Cohort-CNA-pattern-data-preparation). The default filename for this file is "cohort-cna-pattern.txt" and can be changed by the parameter `prior_file`.
 
-### 4. Sample ID mapping file (optional)
+#### 4. Sample ID mapping file (optional)
 
-This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter `use_idmapping` is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
+This optional file is used for mapping IDs used in segment data to expected sample identifiers, such as mapping UUIDs to barcodes in TCGA data. If provided and the parameter `use_idmapping` is set to "true", the sample IDs used in the cohort assignment file should be the expected identifiers. All sample identifiers used in output files will be mapped to these new identifiers. The file format should be tab-delimited and include two columns: original sample identifiers and new sample identifiers. Column names could be flexible but order does matter. The default filename for this file is "sampleid-mapping.txt" and can be changed by the parameter `idmapping_file`.
 
-### 5. Genomic region file (optional)
+#### 5. Genomic region file (optional)
 
-This optional file indicates the genomic regions used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: region index, chromosome, start position, and end position (example see `data/hg38_bin.txt`). The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `region_file`.
+This optional file indicates the genomic regions used to calculate cohort CNA occurrence. If provided and the parameter `use_custom_region` is set to "true", the prior computation will be based on the provided regions. The file format should be tab-delimited and include four columns: region index, chromosome, start position, and end position (example see `data/hg38_bin.txt`). Column names could be flexible but order does matter. The default filename for this file is "cohort-cna-region.txt" and can be changed by the parameter `region_file`.
 
 ## Output
 
