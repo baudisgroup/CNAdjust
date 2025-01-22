@@ -46,13 +46,13 @@ You have two options for installing the pipeline.
 **Install using nextflow:** This will automatically install the pipeline in the `$HOME` directory under the `.nextflow/assets` sub-directory.
 
 ```bash
-nextflow pull hangjiaz/CNAdjust
+nextflow pull baudisgroup/CNAdjust
 ```
 
 **Clone the repository:** Alternatively, you can clone the pipeline repository into a desired directory using:
 
 ```bash
-git clone https://github.com/hangjiaz/CNAdjust.git
+git clone https://github.com/baudisgroup/CNAdjust.git
 ```
 
 and then run this workflow by pointing to the installation path.
@@ -64,7 +64,7 @@ and then run this workflow by pointing to the installation path.
 If you installed the pipeline using nextflow, simply point to the installation path as follows;
 
 ```bash
-nextflow run ~/.nextflow/assets/hangjiaz/CNAdjust --help
+nextflow run ~/.nextflow/assets/baudisgroup/CNAdjust --help
 ```
 
 If the help message is printed, it means the installation was successful.
@@ -72,7 +72,7 @@ If the help message is printed, it means the installation was successful.
 ### Try a test run
 
 ```bash
-nextflow run ~/.nextflow/assets/hangjiaz/CNAdjust -profile test
+nextflow run ~/.nextflow/assets/baudisgroup/CNAdjust -profile test
 ```
 
 This command will use the `test-data` folder as input and output the result in the current directory.
