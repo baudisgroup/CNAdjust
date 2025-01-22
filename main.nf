@@ -11,7 +11,7 @@ def helpMessage() {
     Usage:
     
     The typical command for running the pipeline is as follows:
-    nextflow run hangjiaz/CNAdjust --inputdir <path to input directory> --series <name of series to be analyzed> --outputdir <path to output directory>
+    nextflow run <path to CNAdjust> --inputdir <path to input directory> --series <name of series to be analyzed> --outputdir <path to output directory>
     
     Mandatory parameters:
       --inputdir                  Path to the input data directory.
