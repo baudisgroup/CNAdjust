@@ -28,7 +28,16 @@ compute.fit <- function(seg){
 compute.pointprob <- function(fit, point, reffit=NULL,label=NULL){
   # if only one called CNV for specific level
   if (is.na(fit$estimate[2])) fit <- reffit[[label]]
-  prob <- pnorm(point, mean=fit$estimate[1], sd=fit$estimate[2], lower.tail = point <= fit$estimate[1]) 
+  ## P(X <= di)
+  if (label %in% c("+1","+2")){
+    prob <- pnorm(point, mean=fit$estimate[1], sd=fit$estimate[2], lower.tail = T) 
+  ## P(X >= di)
+  } else if (label %in% c("-1","-2")){
+    prob <- pnorm(point, mean=fit$estimate[1], sd=fit$estimate[2], lower.tail = F)
+  ## 1 - (two-sided tail probability of di) 
+  } else{
+    prob <- 2 * pnorm(fit$estimate[1]-abs(point-fit$estimate[1]), mean=fit$estimate[1], sd=fit$estimate[2], lower.tail = T) 
+  }  
   return(prob)
 }
 
